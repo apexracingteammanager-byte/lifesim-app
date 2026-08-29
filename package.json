@@ -1,0 +1,16 @@
+{
+  "name": "lifesim-app",
+  "version": "1.0.0",
+  "description": "Life Sim: Ultimate Reality - Capacitor Android wrapper",
+  "scripts": {
+    "sync": "npx cap sync android",
+    "open": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/android": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "appId": "com.sheikh.lifesim",
+  "appName": "Life Sim: Ultimate Reality",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}

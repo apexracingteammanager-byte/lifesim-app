@@ -1,0 +1,16 @@
+{
+  "name": "lifesim-android-build",
+  "image": "mcr.microsoft.com/devcontainers/java:17-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" }
+  },
+  "postCreateCommand": "bash .devcontainer/setup-android-sdk.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": ["vscjava.vscode-java-pack"]
+    }
+  },
+  "hostRequirements": {
+    "memory": "8gb"
+  }
+}
