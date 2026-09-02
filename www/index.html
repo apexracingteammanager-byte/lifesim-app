@@ -6335,39 +6335,54 @@
     });
   }
 </script>
-<script type="module">
-  import { AdMob, RewardAdPluginEvents, InterstitialAdPluginEvents } from '@capacitor-community/admob';
-  const TEST_MODE = true;
-  const AD_UNITS = {
+
+
+<script>
+(function() {
+  var TEST_MODE = true;
+
+  var AD_UNITS = {
     rewarded: TEST_MODE ? 'ca-app-pub-3940256099942544/5224354917' : 'ca-app-pub-2386684702784591/9456661494',
-    interstitial: TEST_MODE ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-2386684702784591/8221752241',
+    interstitial: TEST_MODE ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-2386684702784591/8221752241'
   };
-  AdMob.initialize({ initializeForTesting: TEST_MODE });
-  window.showRewardedAd = async (onReward, onFail) => {
-    try {
-      await AdMob.prepareRewardVideoAd({ adId: AD_UNITS.rewarded });
-      const rewardListener = AdMob.addListener(RewardAdPluginEvents.Rewarded, () => {
-        rewardListener.remove(); failListener.remove(); onReward();
-      });
-      const failListener = AdMob.addListener(RewardAdPluginEvents.FailedToLoad, () => {
-        rewardListener.remove(); failListener.remove(); onFail();
-      });
-      await AdMob.showRewardVideoAd();
-    } catch (e) { console.error('Rewarded ad failed', e); onFail(); }
+
+  function getAdMob() {
+    return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob;
+  }
+
+  function initAdMob() {
+    var AdMob = getAdMob();
+    if (!AdMob) { console.warn('AdMob plugin not available yet'); return; }
+    AdMob.initialize({ initializeForTesting: TEST_MODE }).catch(function(e) {
+      console.error('AdMob init failed', e);
+    });
+  }
+  window.addEventListener('load', initAdMob);
+  initAdMob();
+
+  window.showRewardedAd = function(onReward, onFail) {
+    var AdMob = getAdMob();
+    if (!AdMob) { onFail(); return; }
+    AdMob.prepareRewardVideoAd({ adId: AD_UNITS.rewarded })
+      .then(function() { return AdMob.showRewardVideoAd(); })
+      .then(function(rewardItem) { onReward(rewardItem); })
+      .catch(function(e) { console.error('Rewarded ad failed', e); onFail(); });
   };
-  window.showInterstitialAd = async (onDone) => {
-    try {
-      await AdMob.prepareInterstitial({ adId: AD_UNITS.interstitial });
-      const dismissListener = AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
-        dismissListener.remove(); onDone();
-      });
-      await AdMob.showInterstitial();
-    } catch (e) { console.error('Interstitial ad failed', e); onDone(); }
+
+  window.showInterstitialAd = function(onDone) {
+    var AdMob = getAdMob();
+    if (!AdMob) { onDone(); return; }
+    AdMob.prepareInterstitial({ adId: AD_UNITS.interstitial })
+      .then(function() { return AdMob.showInterstitial(); })
+      .then(function() { onDone(); })
+      .catch(function(e) { console.error('Interstitial ad failed', e); onDone(); });
   };
-  window.purchaseRemoveAds = async (onSuccess, onFail) => {
+
+  window.purchaseRemoveAds = function(onSuccess, onFail) {
     console.warn('purchaseRemoveAds not yet wired to real billing');
     onFail();
   };
+})();
 </script>
 
 </body>
