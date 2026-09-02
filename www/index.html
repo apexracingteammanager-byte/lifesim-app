@@ -6335,5 +6335,40 @@
     });
   }
 </script>
+<script type="module">
+  import { AdMob, RewardAdPluginEvents, InterstitialAdPluginEvents } from '@capacitor-community/admob';
+  const TEST_MODE = true;
+  const AD_UNITS = {
+    rewarded: TEST_MODE ? 'ca-app-pub-3940256099942544/5224354917' : 'ca-app-pub-2386684702784591/9456661494',
+    interstitial: TEST_MODE ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-2386684702784591/8221752241',
+  };
+  AdMob.initialize({ initializeForTesting: TEST_MODE });
+  window.showRewardedAd = async (onReward, onFail) => {
+    try {
+      await AdMob.prepareRewardVideoAd({ adId: AD_UNITS.rewarded });
+      const rewardListener = AdMob.addListener(RewardAdPluginEvents.Rewarded, () => {
+        rewardListener.remove(); failListener.remove(); onReward();
+      });
+      const failListener = AdMob.addListener(RewardAdPluginEvents.FailedToLoad, () => {
+        rewardListener.remove(); failListener.remove(); onFail();
+      });
+      await AdMob.showRewardVideoAd();
+    } catch (e) { console.error('Rewarded ad failed', e); onFail(); }
+  };
+  window.showInterstitialAd = async (onDone) => {
+    try {
+      await AdMob.prepareInterstitial({ adId: AD_UNITS.interstitial });
+      const dismissListener = AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+        dismissListener.remove(); onDone();
+      });
+      await AdMob.showInterstitial();
+    } catch (e) { console.error('Interstitial ad failed', e); onDone(); }
+  };
+  window.purchaseRemoveAds = async (onSuccess, onFail) => {
+    console.warn('purchaseRemoveAds not yet wired to real billing');
+    onFail();
+  };
+</script>
+
 </body>
 </html>

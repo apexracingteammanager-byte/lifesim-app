@@ -27,7 +27,11 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
-    </application>
+
+                <meta-data
+                            android:name="com.google.android.gms.ads.APPLICATION_ID"
+                                        android:value="ca-app-pub-2386684702784591~8476119292"/>
+                                            </application>
 
     <!-- Permissions -->
 
