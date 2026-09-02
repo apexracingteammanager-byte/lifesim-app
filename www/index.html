@@ -1563,7 +1563,7 @@
         currentMorePage = key;
         $('more-menu').classList.add('hidden');
         $('more-page').classList.remove('hidden');
-        ['edu', 'care', 'marriage', 'finance', 'politics', 'settings'].forEach(k => {
+        ['edu', 'care', 'marriage', 'finance', 'politics', 'settings', 'ads'].forEach(k => {
             const el = $('page-' + k);
             if (el) el.classList.toggle('hidden', k !== key);
         });
